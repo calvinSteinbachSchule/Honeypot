@@ -1,0 +1,9 @@
+HTTP/1.1 200 OK
+expires: Wed, 11 Jan 1984 05:00:00 GMT
+cache-control: no-cache, must-revalidate, max-age=0, no-store, private
+content-type: text/html; charset=UTF-8
+set-cookie: wordpress_test_cookie=WP%20Cookie%20check; path=/; HttpOnly
+x-frame-options: SAMEORIGIN
+content-security-policy: frame-ancestors 'self';
+referrer-policy: strict-origin-when-cross-origin
+
