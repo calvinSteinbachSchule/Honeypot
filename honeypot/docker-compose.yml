@@ -1,0 +1,33 @@
+services:
+  php:
+    build: .
+    restart: unless-stopped
+    volumes:
+      - ./public:/var/www/html
+      - ./src:/var/www/src
+      - ./templates:/var/www/templates
+    env_file: .env
+    networks:
+      - web
+      - db
+    depends_on:
+      - db
+
+  db:
+    image: mariadb:12.3
+    restart: unless-stopped
+    env_file: .env
+    volumes:
+      - db-data:/var/lib/mysql
+      - ./schema.sql:/docker-entrypoint-initdb.d/schema.sql:ro
+    networks:
+      - db
+
+networks:
+  web:
+    name: honeypot-web
+  db:
+    internal: true
+volumes:
+  db-data:
+
