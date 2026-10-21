@@ -4,7 +4,7 @@ create table angreifer
   land varchar(255) null,
   netzbetreiber varchar(255) null
 
-);
+) default charset = utf8mb4;
 
 
 create table versuch
@@ -18,12 +18,12 @@ create table versuch
   useragent varchar(255),
   angriffsmuster varchar(255),
   constraint fk_angreifer foreign key(angreifer) references angreifer(ip)
-);
+) default charset = utf8mb4;
 
 create table admin
 (
   id int unsigned not null auto_increment primary key,
   benutzername varchar(255) not null unique,
   passworthash varchar(255) not null
-);
+) default charset = utf8mb4;
 
