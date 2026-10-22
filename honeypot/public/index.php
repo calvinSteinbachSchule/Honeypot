@@ -1,6 +1,7 @@
 <?php
 
 require_once __DIR__ . "/../src/logger.php";
+require_once __DIR__ . "/../src/dashboard.php";
 
 const TEMPLATES = __DIR__ . "/../templates";
 
@@ -18,6 +19,11 @@ $userAgent = $_SERVER["HTTP_USER_AGENT"] ?? null;
 $uri = $_SERVER["REQUEST_URI"] ?? "/";
 $method = $_SERVER["REQUEST_METHOD"] ?? "GET";
 $pfad = strtolower(rawurldecode((string) parse_url($uri, PHP_URL_PATH)));
+
+if ($pfad === "/dashboard" || $pfad === "/dashboard/") {
+    dashboardSeite($method);
+    exit;
+}
 
 // Gefälschte WordPress-Anmeldeseite
 if ($pfad === "/wp-login.php") {
@@ -135,4 +141,48 @@ function xmlrpcSeite(string $method, string $ip, string $uri, ?string $userAgent
        . '<member><name>faultCode</name><value><int>403</int></value></member>'
        . '<member><name>faultString</name><value><string>Incorrect username or password.</string></value></member>'
        . '</struct></value></fault></methodResponse>';
+}
+
+function dashboardSeite(string $method): void
+{
+    header("X-Robots-Tag: noindex, nofollow");
+    header("Cache-Control: no-store");
+    header("X-Frame-Options: DENY");
+    sessionStarten();
+
+    $fehler = "";
+
+    if ($method === "POST") {
+        if (!csrfPruefen()) {
+            http_response_code(400);
+            $fehler = "Ungültige Anfrage, bitte erneut versuchen.";
+        } elseif (($_POST["aktion"] ?? "") === "abmelden") {
+            $_SESSION = [];
+            session_destroy();
+            header("Location: /dashboard", true, 303);
+            return;
+        } elseif (!istAngemeldet()) {
+            $benutzer = $_POST["benutzername"] ?? "";
+            $passwort = $_POST["passwort"] ?? "";
+            if (is_string($benutzer) && is_string($passwort) && adminAnmelden($benutzer, $passwort)) {
+                header("Location: /dashboard", true, 303);
+                return;
+            }
+            sleep(1);
+            http_response_code(401);
+            $fehler = "Benutzername oder Passwort falsch.";
+        }
+    }
+
+    $csrf = csrfToken();
+
+    if (!istAngemeldet()) {
+        require TEMPLATES . "/dashboard-login.php";
+        return;
+    }
+
+    $filter = filterLesen($_GET);
+    $daten = auswertung($filter);
+    $laender = alleLaender();
+    require TEMPLATES . "/dashboard.php";
 }
