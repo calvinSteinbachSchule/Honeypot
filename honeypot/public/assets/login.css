@@ -1,0 +1,126 @@
+body
+{
+    margin: 0;
+    background: #f0f0f1;
+    color: #3c434a;
+    font-family: -apple-system, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+    font-size: 13px;
+}
+
+#login
+{
+    width: 320px;
+    margin: 0 auto;
+    padding: 8% 0 0;
+}
+
+.logo
+{
+    text-align: center;
+    margin: 0 0 25px;
+}
+
+.logo a
+{
+    display: inline-block;
+    width: 84px;
+    height: 84px;
+    line-height: 84px;
+    border-radius: 50%;
+    background: #3c434a;
+    color: #f0f0f1;
+    font-family: Georgia, serif;
+    font-size: 56px;
+    text-decoration: none;
+}
+
+#loginform
+{
+    background: #fff;
+    border: 1px solid #c3c4c7;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+    padding: 26px 24px;
+}
+
+label
+{
+    display: block;
+    font-size: 14px;
+    margin-bottom: 3px;
+}
+
+#user_login,
+#user_pass
+{
+    width: 100%;
+    box-sizing: border-box;
+    font-size: 24px;
+    padding: 3px 5px;
+    margin: 0 0 16px;
+    border: 1px solid #8c8f94;
+    border-radius: 4px;
+}
+
+.forgetmenot
+{
+    float: left;
+    margin: 4px 0 0;
+}
+
+.forgetmenot label
+{
+    display: inline;
+}
+
+#wp-submit
+{
+    float: right;
+    background: #2271b1;
+    border: 1px solid #2271b1;
+    border-radius: 3px;
+    color: #fff;
+    font-size: 13px;
+    padding: 0 12px;
+    min-height: 32px;
+    cursor: pointer;
+}
+
+#loginform::after
+{
+    content: "";
+    display: block;
+    clear: both;
+}
+
+#login_error
+{
+    background: #fff;
+    border-left: 4px solid #d63638;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
+    padding: 12px;
+    margin-bottom: 20px;
+}
+
+#login_error p
+{
+    margin: 0;
+}
+
+#nav,
+#backtoblog
+{
+    padding: 0 24px;
+    margin: 16px 0 0;
+}
+
+#nav a,
+#backtoblog a
+{
+    color: #50575e;
+    text-decoration: none;
+}
+
+#login_error a
+{
+    color: #2271b1;
+}

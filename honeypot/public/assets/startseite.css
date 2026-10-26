@@ -1,0 +1,71 @@
+body
+{
+    margin: 0;
+    font-family: Georgia, serif;
+    background: #f6f2ea;
+    color: #222;
+    line-height: 1.6;
+}
+
+a
+{
+    color: #1b5f87;
+}
+
+.kopf
+{
+    background: #2b2620;
+    color: #fff;
+    padding: 1.5rem 2rem;
+}
+
+.kopf a
+{
+    color: #fff;
+    margin-right: 1.5rem;
+    text-decoration: none;
+}
+
+.layout
+{
+    display: flex;
+    gap: 3rem;
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.beitraege
+{
+    flex: 3;
+}
+
+aside
+{
+    flex: 1;
+}
+
+article
+{
+    border-bottom: 1px solid #ccc;
+    margin-bottom: 1rem;
+}
+
+article h2 a
+{
+    color: #222;
+    text-decoration: none;
+}
+
+.meta
+{
+    color: #666;
+    font-size: 0.9rem;
+}
+
+.fuss
+{
+    text-align: center;
+    color: #666;
+    padding: 2rem;
+}

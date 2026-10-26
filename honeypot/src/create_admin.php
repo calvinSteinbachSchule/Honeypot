@@ -1,24 +1,27 @@
 <?php
 
-// Legt einen Dashboard-Benutzer an (Passwort wird als Hash gespeichert).
-// Aufruf im Container:
-//   docker compose exec php php /var/www/src/create_admin.php <benutzername> <passwort>
+    include_once(__DIR__ . "/funktionen.php");
 
-if (PHP_SAPI !== "cli") {
-    exit(1);
-}
+    $benutzername = (string) readline("Benutzername: ");
+    $passwort = (string) readline("Passwort: ");
 
-require_once __DIR__ . "/db.php";
+    if($benutzername === "" || $passwort === "")
+    {
+        echo "Benutzername und Passwort dürfen nicht leer sein.\n";
+    }
+    else
+    {
+        $hash = password_hash($passwort, PASSWORD_DEFAULT);
 
-if ($argc !== 3 || strlen($argv[2]) < 8) {
-    fwrite(STDERR, "Aufruf: php create_admin.php <benutzername> <passwort (mind. 8 Zeichen)>\n");
-    exit(1);
-}
+        $pdo = verbindung();
 
-$stmt = Database::connection()->prepare(
-    "INSERT INTO admin (benutzername, passworthash) VALUES (:b, :h)
-     ON DUPLICATE KEY UPDATE passworthash = VALUES(passworthash)"
-);
-$stmt->execute([":b" => $argv[1], ":h" => password_hash($argv[2], PASSWORD_DEFAULT)]);
+        $stmt = $pdo->prepare("DELETE FROM admin WHERE benutzername = :benutzername");
+        $stmt->execute([":benutzername" => $benutzername]);
 
-echo "Admin '{$argv[1]}' angelegt bzw. Passwort aktualisiert.\n";
+        $stmt = $pdo->prepare("INSERT INTO admin (benutzername, passworthash) VALUES (:benutzername, :hash)");
+        $stmt->execute([":benutzername" => $benutzername, ":hash" => $hash]);
+
+        echo "Admin {$benutzername} wurde angelegt.\n";
+    }
+
+?>

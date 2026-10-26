@@ -26,27 +26,30 @@ Voraussetzung: Docker mit Docker Compose.
 2. Container starten: `docker compose up -d --build`
    Beim ersten Start legt MariaDB die Tabellen aus `schema.sql` an.
 3. Dashboard-Benutzer anlegen:
-   `docker compose exec php php /var/www/src/create_admin.php <benutzername> <passwort>`
-   (Passwort mindestens 8 Zeichen, gespeichert wird nur der Hash.)
-4. Betrieb auf dem VPS (Hetzner, `/opt/projects/honeypot`): Der Webserver Caddy
-   (Container `caddy-monitoring`, im Netzwerk `honeypot-web`) bedient die Domain
-   `honeypot.calvinsteinbach.de` mit Let's-Encrypt-Zertifikat und leitet per
-   `reverse_proxy php:80` an den Container `php` weiter. Er setzt den Header
-   `X-Forwarded-For`, damit die echte Angreifer-IP gespeichert wird.
-   Die Datenbank liegt in einem internen Netzwerk und ist von außen nicht erreichbar.
+   `docker compose exec php php /var/www/src/create_admin.php`
+   Das Skript fragt Benutzername und Passwort ab. Gibt es den Benutzer schon, wird sein Passwort ersetzt.
+   (Gespeichert wird nur der Hash des Passworts.)
+4. Auf dem Server läuft der Honeypot hinter dem Webserver Caddy, der für HTTPS sorgt.
+   Die Datenbank ist von außen nicht erreichbar.
 
 ## 3. Der Honeypot
 
 | Pfad | Verhalten |
 |------|-----------|
 | `/wp-login.php` | Gefälschte Anmeldeseite. Jeder Versuch wird abgelehnt und mit IP, Zeitpunkt, Benutzername, Passwort und User-Agent gespeichert. |
-| `/xmlrpc.php` | Gefälschte XML-RPC-Schnittstelle, antwortet mit Fehler 403. Zugangsdaten im XML werden gespeichert. |
-| `/wp-admin`, `/phpmyadmin`, `/.env`, `/admin` u. a. | Zugriff wird protokolliert, Antwort ist 404 (bzw. Weiterleitung bei `/wp-admin`). |
+| `/.env` (und Varianten wie `.env.bak`), `/wp-config.php` (und `.bak`), `/backup.sql` | Köderdateien: Zugriff wird protokolliert, die Antwort enthält erfundene Zugangsdaten (siehe unten). |
+| `/xmlrpc.php`, `/wp-admin`, `/phpmyadmin`, `/admin` u. a. | Zugriff wird protokolliert, Antwort ist 404 (bzw. Weiterleitung bei `/wp-admin`). |
 | alle anderen Pfade | 404, ohne Eintrag |
 
+**Köderdateien:** Bots suchen gezielt nach Dateien wie `.env` oder `wp-config.php`, in denen
+Zugangsdaten stehen. Der Honeypot liefert dort erfundene Inhalte aus (`public/index.php`). Die
+Zugangsdaten darin gelten nirgends. Probiert ein Bot sie später auf `/wp-login.php` aus, erscheinen
+sie im Dashboard unter „Meistprobierte Benutzernamen“ und „Passwörter“. So lässt sich erkennen, dass
+ein Bot die Daten aus einer Köderdatei hat. In die Köderdateien gehören nie echte Zugangsdaten.
+
 Bei jeder **neuen** IP-Adresse werden Land und Netzbetreiber einmalig über
-ip-api.com abgefragt und gespeichert. Ist die API nicht erreichbar, bleibt das
-Land leer (Anzeige „Unbekannt“) und der Honeypot arbeitet normal weiter.
+ip-api.com abgefragt und gespeichert. Ist die API nicht erreichbar, steht als
+Land „Unbekannt“ und der Honeypot arbeitet normal weiter.
 
 Jede Eingabe wird auf typische Angriffsmuster geprüft. Erkannt werden
 **SQL-Injection** (z. B. `' OR '1'='1`, `UNION SELECT`) und **XSS**
@@ -79,8 +82,7 @@ wendet die Auswahl auf alle Kennzahlen, Diagramme und Tabellen an,
 - Alle Datenbankzugriffe verwenden Prepared Statements (Schutz vor SQL-Injection).
 - Alle gespeicherten Daten werden mit `htmlspecialchars` ausgegeben (Schutz vor XSS).
 - Eingaben werden auf 255 Zeichen begrenzt.
-- Dashboard-Passwörter werden mit `password_hash` gespeichert, Anmeldung über Sessions
-  mit CSRF-Schutz und Cookie-Flags `HttpOnly`, `SameSite=Strict` (und `Secure` unter HTTPS).
+- Dashboard-Passwörter werden mit `password_hash` gespeichert, Anmeldung über Sessions.
 - IP-Adressen werden nur zur Auswertung im Rahmen des Projekts gespeichert und nach
   Projektende gelöscht, z. B. mit
   `docker compose down -v` (löscht auch das Datenbank-Volume).
@@ -88,9 +90,7 @@ wendet die Auswahl auf alle Kennzahlen, Diagramme und Tabellen an,
 
 ## 6. Fehlersuche
 
-| Problem | Ursache / Lösung |
-|---------|------------------|
-| Dashboard-Anmeldung klappt nicht | Admin mit `create_admin.php` anlegen oder Passwort damit neu setzen |
-| Alle Einträge haben dieselbe interne IP | Caddy setzt `X-Forwarded-For` nicht, oder das Docker-Netzwerk liegt außerhalb von `172.16.0.0/12` (`RemoteIPInternalProxy` in `docker/apache-honeypot.conf`) |
-| Land ist immer „Unbekannt“ | API nicht erreichbar oder Rate-Limit (45 Anfragen/Minute), Details im Container-Log: `docker compose logs php` |
-| Tabellen fehlen | `schema.sql` läuft nur beim ersten Start; mit `docker compose down -v` Volume löschen und neu starten |
+| Problem | Lösung |
+|---------|--------|
+| Dashboard-Anmeldung klappt nicht | Admin mit `create_admin.php` neu anlegen, das setzt auch das Passwort neu |
+| Tabellen fehlen | `schema.sql` läuft nur beim ersten Start. Mit `docker compose down -v` neu anfangen (löscht alle Daten) |
