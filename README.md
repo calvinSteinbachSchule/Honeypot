@@ -8,4 +8,4 @@ Herkunftsländer, probierte Zugangsdaten und erkannte Angriffsmuster aus.
 
 - Start: `cd honeypot && docker compose up -d --build`
 - Dashboard-Benutzer: `docker compose exec php php /var/www/src/create_admin.php` (fragt Name und Passwort ab)
-- Doku: `docs/Benutzerhandbuch.md`, `docs/Testfaelle.md`, Antrag in `docs/`
+- Doku: `docs/Benutzerhandbuch.docx`, `docs/Testfaelle.md`, Antrag in `docs/`
