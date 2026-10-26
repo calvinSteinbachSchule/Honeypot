@@ -5,9 +5,15 @@ CREATE TABLE `angreifer` (
   PRIMARY KEY (`ip`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
 
+INSERT INTO `angreifer` VALUES ('1.1.1.1','Australia','Cloudflare, Inc');
+INSERT INTO `angreifer` VALUES ('101.101.101.101','Taiwan','Taiwan Network Information Center');
 INSERT INTO `angreifer` VALUES ('103.158.121.21','Indonesia','CDN');
+INSERT INTO `angreifer` VALUES ('194.25.0.68','Germany','Deutsche Telekom AG');
 INSERT INTO `angreifer` VALUES ('45.138.12.68','Hong Kong','TC DATACENTER LIMITED');
 INSERT INTO `angreifer` VALUES ('45.45.237.39','United States','Infraly, LLC');
+INSERT INTO `angreifer` VALUES ('8.8.8.8','United States','Google LLC');
+INSERT INTO `angreifer` VALUES ('80.80.80.80','San Marino','CheckMe anycast resolver');
+INSERT INTO `angreifer` VALUES ('9.9.9.9','United States','Quad9');
 INSERT INTO `angreifer` VALUES ('94.154.43.99','The Netherlands','Storm Industries LLC');
 
 CREATE TABLE `versuch` (
@@ -22,7 +28,7 @@ CREATE TABLE `versuch` (
   PRIMARY KEY (`id`),
   KEY `fk_angreifer` (`angreifer`),
   CONSTRAINT `fk_angreifer` FOREIGN KEY (`angreifer`) REFERENCES `angreifer` (`ip`)
-) ENGINE=InnoDB AUTO_INCREMENT=109 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=129 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
 
 INSERT INTO `versuch` VALUES (33,'45.45.237.39','2026-10-26 18:29:11','/.env','','','Mozilla/5.0 AppleWebKit/537.36 (KHTML, like Gecko; compatible; GPTBot/1.3; +https://openai.com/gptbot)','keine');
 INSERT INTO `versuch` VALUES (39,'45.138.12.68','2026-10-26 20:36:37','/.env.anthropic','','','Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36','keine');
@@ -65,6 +71,26 @@ INSERT INTO `versuch` VALUES (75,'45.138.12.68','2026-10-26 20:36:42','/wp-confi
 INSERT INTO `versuch` VALUES (76,'45.138.12.68','2026-10-26 20:36:42','/wp-config.php.txt','','','Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36','keine');
 INSERT INTO `versuch` VALUES (100,'103.158.121.21','2026-10-26 21:42:43','/admin/config.php','','','ivre-masscan/1.3 https://github.com/robertdavidgraham/','keine');
 INSERT INTO `versuch` VALUES (108,'94.154.43.99','2026-10-26 22:02:19','/cgi-bin/luci','','','Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.81 Safari/537.36','keine');
+INSERT INTO `versuch` VALUES (109,'8.8.8.8','2026-10-22 22:20:12','/wp-login.php','admin','123456','Testdaten (Vorstellung)','keine');
+INSERT INTO `versuch` VALUES (110,'8.8.8.8','2026-10-26 22:20:12','/wp-login.php','admin','password','Testdaten (Vorstellung)','keine');
+INSERT INTO `versuch` VALUES (111,'8.8.8.8','2026-10-25 22:20:12','/wp-login.php','admin','admin','Testdaten (Vorstellung)','keine');
+INSERT INTO `versuch` VALUES (112,'8.8.8.8','2026-10-24 22:20:12','/wp-login.php','administrator','123456','Testdaten (Vorstellung)','keine');
+INSERT INTO `versuch` VALUES (113,'1.1.1.1','2026-10-23 22:20:13','/wp-login.php','admin\' OR \'1\'=\'1','x','Testdaten (Vorstellung)','SQL-Injection');
+INSERT INTO `versuch` VALUES (114,'1.1.1.1','2026-10-22 22:20:13','/wp-login.php','admin','\' OR 1=1 --','Testdaten (Vorstellung)','SQL-Injection');
+INSERT INTO `versuch` VALUES (115,'1.1.1.1','2026-10-26 22:20:13','/admin?id=1%20UNION%20SELECT%20username,password%20FROM%20users','','','Testdaten (Vorstellung)','SQL-Injection');
+INSERT INTO `versuch` VALUES (116,'9.9.9.9','2026-10-25 22:20:13','/wp-login.php','<script>alert(1)</script>','test','Testdaten (Vorstellung)','XSS');
+INSERT INTO `versuch` VALUES (117,'9.9.9.9','2026-10-24 22:20:13','/wp-login.php','<img src=x onerror=alert(1)>','test','Testdaten (Vorstellung)','XSS');
+INSERT INTO `versuch` VALUES (118,'101.101.101.101','2026-10-23 22:20:13','/wp-login.php','\' OR 1=1 --<script>','x','Testdaten (Vorstellung)','SQL-Injection, XSS');
+INSERT INTO `versuch` VALUES (119,'101.101.101.101','2026-10-22 22:20:13','/wp-login.php','root','toor','Testdaten (Vorstellung)','keine');
+INSERT INTO `versuch` VALUES (120,'101.101.101.101','2026-10-26 22:20:13','/wp-login.php','root','123456','Testdaten (Vorstellung)','keine');
+INSERT INTO `versuch` VALUES (121,'194.25.0.68','2026-10-25 22:20:14','/.env','','','Testdaten (Vorstellung)','keine');
+INSERT INTO `versuch` VALUES (122,'194.25.0.68','2026-10-24 22:20:14','/wp-login.php','webmaster','Blog#Sommer2024','Testdaten (Vorstellung)','keine');
+INSERT INTO `versuch` VALUES (123,'80.80.80.80','2026-10-23 22:20:14','/phpmyadmin/','','','Testdaten (Vorstellung)','keine');
+INSERT INTO `versuch` VALUES (124,'80.80.80.80','2026-10-22 22:20:14','/xmlrpc.php','','','Testdaten (Vorstellung)','keine');
+INSERT INTO `versuch` VALUES (125,'80.80.80.80','2026-10-26 22:20:14','/wp-admin/','','','Testdaten (Vorstellung)','keine');
+INSERT INTO `versuch` VALUES (126,'80.80.80.80','2026-10-25 22:20:14','/wp-login.php?redirect_to=%2Fwp-admin%2F&reauth=1','','','Testdaten (Vorstellung)','keine');
+INSERT INTO `versuch` VALUES (127,'80.80.80.80','2026-10-24 22:20:14','/.git/config','','','Testdaten (Vorstellung)','keine');
+INSERT INTO `versuch` VALUES (128,'80.80.80.80','2026-10-23 22:20:14','/wp-login.php','admin','qwerty','Testdaten (Vorstellung)','keine');
 
 CREATE TABLE `admin` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
