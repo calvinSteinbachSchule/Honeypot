@@ -1,36 +1,15 @@
-/*M!999999\- enable the sandbox mode */ 
-
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8mb4 */;
-/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
-/*!40103 SET TIME_ZONE='+00:00' */;
-/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
-/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
-/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
-/*M!100616 SET @OLD_NOTE_VERBOSITY=@@NOTE_VERBOSITY, NOTE_VERBOSITY=0 */;
-DROP TABLE IF EXISTS `angreifer`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `angreifer` (
   `ip` varchar(45) NOT NULL,
   `land` varchar(255) DEFAULT NULL,
   `netzbetreiber` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`ip`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
-SET @OLD_AUTOCOMMIT=@@AUTOCOMMIT, @@AUTOCOMMIT=0;
 INSERT INTO `angreifer` VALUES ('103.158.121.21','Indonesia','CDN');
 INSERT INTO `angreifer` VALUES ('45.138.12.68','Hong Kong','TC DATACENTER LIMITED');
 INSERT INTO `angreifer` VALUES ('45.45.237.39','United States','Infraly, LLC');
 INSERT INTO `angreifer` VALUES ('94.154.43.99','The Netherlands','Storm Industries LLC');
-COMMIT;
-SET AUTOCOMMIT=@OLD_AUTOCOMMIT;
-DROP TABLE IF EXISTS `versuch`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8mb4 */;
+
 CREATE TABLE `versuch` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `angreifer` varchar(45) NOT NULL,
@@ -44,9 +23,7 @@ CREATE TABLE `versuch` (
   KEY `fk_angreifer` (`angreifer`),
   CONSTRAINT `fk_angreifer` FOREIGN KEY (`angreifer`) REFERENCES `angreifer` (`ip`)
 ) ENGINE=InnoDB AUTO_INCREMENT=109 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
-SET @OLD_AUTOCOMMIT=@@AUTOCOMMIT, @@AUTOCOMMIT=0;
 INSERT INTO `versuch` VALUES (33,'45.45.237.39','2026-10-26 18:29:11','/.env','','','Mozilla/5.0 AppleWebKit/537.36 (KHTML, like Gecko; compatible; GPTBot/1.3; +https://openai.com/gptbot)','keine');
 INSERT INTO `versuch` VALUES (39,'45.138.12.68','2026-10-26 20:36:37','/.env.anthropic','','','Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36','keine');
 INSERT INTO `versuch` VALUES (40,'45.138.12.68','2026-10-26 20:36:37','/.env.aws','','','Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36','keine');
@@ -88,11 +65,7 @@ INSERT INTO `versuch` VALUES (75,'45.138.12.68','2026-10-26 20:36:42','/wp-confi
 INSERT INTO `versuch` VALUES (76,'45.138.12.68','2026-10-26 20:36:42','/wp-config.php.txt','','','Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36','keine');
 INSERT INTO `versuch` VALUES (100,'103.158.121.21','2026-10-26 21:42:43','/admin/config.php','','','ivre-masscan/1.3 https://github.com/robertdavidgraham/','keine');
 INSERT INTO `versuch` VALUES (108,'94.154.43.99','2026-10-26 22:02:19','/cgi-bin/luci','','','Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.81 Safari/537.36','keine');
-COMMIT;
-SET AUTOCOMMIT=@OLD_AUTOCOMMIT;
-DROP TABLE IF EXISTS `admin`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8mb4 */;
+
 CREATE TABLE `admin` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `benutzername` varchar(255) NOT NULL,
@@ -100,18 +73,3 @@ CREATE TABLE `admin` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `benutzername` (`benutzername`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
-SET @OLD_AUTOCOMMIT=@@AUTOCOMMIT, @@AUTOCOMMIT=0;
-COMMIT;
-SET AUTOCOMMIT=@OLD_AUTOCOMMIT;
-/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
-
-/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
-/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
-/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
-/*M!100616 SET NOTE_VERBOSITY=@OLD_NOTE_VERBOSITY */;
-
